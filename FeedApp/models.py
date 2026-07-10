@@ -61,3 +61,12 @@ class Like(models.Model):
 
     def __str__(self):
         return f'{self.user} likes {self.post}'
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user=instance)

@@ -100,7 +100,7 @@ def comments(request, post_id):
 
 @login_required
 def friends(request):
-    user_profile = Profile.objects.get(user=request.user)
+    user_profile, created = Profile.objects.get_or_create(user=request.user)
 
     # Get the profiles of my current friends
     user_friends = user_profile.friends.all()
