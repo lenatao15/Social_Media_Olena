@@ -13,5 +13,3 @@ urlpatterns = [
     path('friends/', views.friends, name='friends'),
 
     ]
-
-    

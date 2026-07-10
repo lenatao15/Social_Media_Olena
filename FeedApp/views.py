@@ -61,7 +61,7 @@ def new_post(request):
             new_post.user = request.user
             new_post.save()
             return redirect('FeedApp:myfeed')
-    
+
     context = {'form': form}
     return render(request, 'FeedApp/new_post.html', context)
 
@@ -102,18 +102,18 @@ def comments(request, post_id):
 def friends(request):
     user_profile = Profile.objects.get(user=request.user)
 
-    # to get my friends
+    # Get the profiles of my current friends
     user_friends = user_profile.friends.all()
     user_friends_profiles = Profile.objects.filter(user__in=user_friends)
     
-    # to get friends that I sent request to
+    # Get all relationships (pending and accepted) initiated by me
     user_relationships = Relationship.objects.filter(sender=user_profile)
     request_sent_from_profiles = user_relationships.values('receiver')
     
-    # to get eligible profiles - exclude myself, my friends, and profiles I sent request to
+    # Get eligible profiles to add - exclude myself, current friends, and profiles I have already sent requests to
     profiles_to_add = Profile.objects.exclude(user=request.user).exclude(id__in=user_friends_profiles).exclude(id__in=request_sent_from_profiles)
     
-    # to get friends that sent request to me
+    # Get pending friend requests sent to me
     request_received_profiles = Relationship.objects.filter(receiver=user_profile, status='sent')
 
     if request.method == 'POST' and request.POST.get('send_requests'):
