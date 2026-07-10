@@ -10,3 +10,4 @@ CLAUDE.md
 staticfiles/
 .env
 media/
+*README.md

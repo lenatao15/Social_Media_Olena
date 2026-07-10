@@ -28,15 +28,14 @@ class Command(BaseCommand):
             first_name='Olena',
             last_name='Shevchenko'
         )
-        # Profile is created automatically in views if missing, but we create it here
-        main_profile = Profile.objects.create(
-            user=main_user,
-            first_name='Olena',
-            last_name='Shevchenko',
-            email='olena@example.com',
-            dob=date(2003, 5, 15),
-            bio='CS Student | Explorer of new technologies | Coffee Lover ☕'
-        )
+        # Profile is created automatically via signal when User is created, so we update it here
+        main_profile = Profile.objects.get(user=main_user)
+        main_profile.first_name = 'Olena'
+        main_profile.last_name = 'Shevchenko'
+        main_profile.email = 'olena@example.com'
+        main_profile.dob = date(2003, 5, 15)
+        main_profile.bio = 'CS Student | Explorer of new technologies | Coffee Lover ☕'
+        main_profile.save()
 
         # 2. Create Dummy Users
         users_data = [
@@ -56,13 +55,12 @@ class Command(BaseCommand):
                 first_name=u_data['first_name'],
                 last_name=u_data['last_name']
             )
-            profile = Profile.objects.create(
-                user=user,
-                first_name=u_data['first_name'],
-                last_name=u_data['last_name'],
-                email=u_data['email'],
-                bio=u_data['bio']
-            )
+            profile = Profile.objects.get(user=user)
+            profile.first_name = u_data['first_name']
+            profile.last_name = u_data['last_name']
+            profile.email = u_data['email']
+            profile.bio = u_data['bio']
+            profile.save()
             users[user.username] = user
             profiles[user.username] = profile
 
