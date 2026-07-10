@@ -1,0 +1,66 @@
+{% extends "FeedApp/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <!-- Main Post Card -->
+        <div class="post-card mb-4">
+            <div class="post-header">
+                <div class="post-avatar">{{ post.user.username|slice:":1"|upper }}</div>
+                <div class="post-user-info">
+                    <span class="post-user">{{ post.user }}</span>
+                    <span class="post-date">{{ post.date_posted|date:"F j, Y, g:i a" }}</span>
+                </div>
+            </div>
+            <div class="post-body">
+                <p class="post-description">{{ post.description }}</p>
+                {% if post.image %}
+                <div class="post-image-wrapper">
+                    <img src="{{ post.image.url }}" class="post-image" alt="Post Image">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="card p-4">
+            <h4 class="mb-3"><i class="fa-regular fa-comments mr-2"></i>Comments</h4>
+            
+            <ul class="list-group mb-4">
+                {% for c in comments %}
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <span class="font-weight-bold mr-2 text-primary">@{{ c.user }}</span>
+                        <span>{{ c.text }}</span>
+                    </div>
+                    <span class="text-muted small">{{ c.date_added|date:"M d, g:i a" }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted py-4 text-center">
+                    <i class="fa-regular fa-comment-dots fa-2x mb-2 text-secondary d-block"></i>
+                    No comments yet. Be the first to share your thoughts!
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h5 class="mb-3">Add Comment</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <input
+                        type="text"
+                        name="comment"
+                        class="form-control"
+                        placeholder="Write a comment..."
+                        required
+                    />
+                </div>
+                <button type="submit" name="btn1" value="1" class="btn btn-primary">
+                    <i class="fa-regular fa-paper-plane mr-1"></i> Submit
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

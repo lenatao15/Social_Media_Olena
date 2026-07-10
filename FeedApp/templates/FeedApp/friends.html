@@ -1,0 +1,152 @@
+{% extends "FeedApp/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h1 class="mb-4 text-center"><i class="fa-solid fa-user-group mr-2"></i>Friends Manager</h1>
+
+<div class="row">
+    <!-- Left Column: Friends List & Sent Requests -->
+    <div class="col-lg-6">
+        <!-- My Friends Card -->
+        <div class="card p-4 mb-4">
+            <h3 class="mb-3"><i class="fa-solid fa-user-check mr-2 text-success"></i>My Friends</h3>
+            <div class="table-responsive-custom">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for friend in user_friends_profiles %}
+                        <tr>
+                            <td><strong>@{{ friend.user.username }}</strong></td>
+                            <td>{{ friend.first_name }} {{ friend.last_name }}</td>
+                            <td><span class="text-muted">{{ friend.email }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">No friends added yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Friend Requests Sent Card -->
+        <div class="card p-4 mb-4">
+            <h3 class="mb-3"><i class="fa-solid fa-paper-plane mr-2 text-primary"></i>Friend Requests Sent</h3>
+            <div class="table-responsive-custom">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in user_relationships %}
+                        <tr>
+                            <td><strong>@{{ r.receiver.user.username }}</strong></td>
+                            <td>
+                                <span class="badge {% if r.status == 'accepted' %}badge-success{% else %}badge-secondary{% endif %}">
+                                    {{ r.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-4">No requests sent.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Send & Receive Requests -->
+    <div class="col-lg-6">
+        <!-- Send a Friend Request Card -->
+        <div class="card p-4 mb-4">
+            <h3 class="mb-3"><i class="fa-solid fa-user-plus mr-2 text-info"></i>Send a Request</h3>
+            <form action="{% url 'FeedApp:friends' %}" method="post">
+                {% csrf_token %}
+                <div class="table-responsive-custom">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Name</th>
+                                <th class="text-center">Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profile in profiles_to_add %}
+                            <tr>
+                                <td><strong>@{{ profile.user.username }}</strong></td>
+                                <td>{{ profile.first_name }} {{ profile.last_name }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="send_requests" value="{{ profile.id }}" />
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No new users to add.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if profiles_to_add %}
+                <button name="submit" class="btn btn-primary btn-block mt-3">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Send Requests
+                </button>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Friend Requests Received Card -->
+        <div class="card p-4 mb-4">
+            <h3 class="mb-3"><i class="fa-solid fa-bell mr-2 text-warning"></i>Friend Requests Received</h3>
+            <form action="{% url 'FeedApp:friends' %}" method="post">
+                {% csrf_token %}
+                <div class="table-responsive-custom">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Name</th>
+                                <th class="text-center">Accept</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rrp in request_received_profiles %}
+                            <tr>
+                                <td><strong>@{{ rrp.sender.user.username }}</strong></td>
+                                <td>{{ rrp.sender.first_name }} {{ rrp.sender.last_name }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="receive_requests" value="{{ rrp.id }}" />
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No pending requests received.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if request_received_profiles %}
+                <button name="submit" class="btn btn-primary btn-block mt-3">
+                    <i class="fa-solid fa-check mr-1"></i> Approve Requests
+                </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

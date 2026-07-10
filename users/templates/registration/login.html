@@ -1,24 +1,35 @@
 {% extends "FeedApp/base.html" %}
 {% load bootstrap4 %}
 
-
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card p-4 mt-5">
+            <h2 class="text-center mb-4"><i class="fa-solid fa-right-to-bracket mr-2"></i>Log In</h2>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                Your username and password didn't match. Please try again.
+            </div>
+            {% endif %}
 
-    <!--If the form’s errors attribute is set, we display an error message-->
-    {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-
-    <!--set the action argument as the URL of the login page-->
-    <form action="{% url 'users:login' %}" method='post'>
-        {% csrf_token %}
-        {% bootstrap_form form %}
-
-        <button class="btn btn-outline-primary" name="submit">Log in</button>
-        <!--include a hidden form element, 'next'; the value argument 
-            tells Django where to redirect the user after they’ve logged in successfully.-->
-        <input type="hidden" name="next"
-        value="{% url 'FeedApp:index' %}" />
-    </form>
-
+            <form action="{% url 'users:login' %}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                
+                <div class="mt-4">
+                    <button class="btn btn-primary btn-block" name="submit">
+                        Log In
+                    </button>
+                </div>
+                <input type="hidden" name="next" value="{% url 'FeedApp:index' %}" />
+            </form>
+            
+            <div class="text-center mt-3">
+                <span class="text-muted">Don't have an account?</span> 
+                <a href="{% url 'users:register' %}" class="post-stat-link d-inline-block ml-1">Register here</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

@@ -1,12 +1,17 @@
 {% extends "FeedApp/base.html" %}
 
-{% block page_header %}
-    <div class="jumbotron">
-       <h1 class="display-3">Feed</h1>
-            <p class="lead">A Social Network where you can be you.
-            </p>
-
-            <a class="btn btn-lg btn-outline-primary" href="{% url 'users:register' %}"
-            role="button">Join Now &raquo;</a>
+{% block content %}
+    <div class="jumbotron-custom">
+        <h1 class="display-3">Welcome to Feed</h1>
+        <p class="lead">A futuristic space to express yourself, connect with friends, and share your moments.</p>
+        {% if not user.is_authenticated %}
+            <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}" role="button">
+                Get Started <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+        {% else %}
+            <a class="btn btn-lg btn-primary" href="{% url 'FeedApp:friends_feed' %}" role="button">
+                Go to Feed <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+        {% endif %}
     </div>
-{% endblock page_header %}
+{% endblock content %}

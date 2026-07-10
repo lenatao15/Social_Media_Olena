@@ -1,14 +1,29 @@
 {% extends "FeedApp/base.html" %}
+{% load bootstrap4 %}
 
 {% block content %}
-
-  <form action="{% url 'users:register' %}" method="post" >
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button name="submit">Register</button>
-    <input type="hidden" name="next" 
-    value="{% url 'FeedApp:index' %}" />
-  </form>
-
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card p-4 mt-4">
+            <h2 class="text-center mb-4"><i class="fa-solid fa-user-plus mr-2"></i>Register</h2>
+            
+            <form action="{% url 'users:register' %}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                
+                <div class="mt-4">
+                    <button class="btn btn-primary btn-block" name="submit">
+                        Register
+                    </button>
+                </div>
+                <input type="hidden" name="next" value="{% url 'FeedApp:index' %}" />
+            </form>
+            
+            <div class="text-center mt-3">
+                <span class="text-muted">Already have an account?</span> 
+                <a href="{% url 'users:login' %}" class="post-stat-link d-inline-block ml-1">Log in here</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

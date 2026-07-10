@@ -1,71 +1,95 @@
 {% load bootstrap4 %}
+{% load static %}
 
 <!doctype html>
-
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1,
-          shrink-to-fit=no">
-        <title>Feed</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Feed</title>
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'FeedApp/style.css' %}">
+  </head>
 
-        {% bootstrap_css %}
-        {% bootstrap_javascript jquery='full' %}
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom mb-4">
+      <a class="navbar-brand" href="{% url 'FeedApp:index'%}">
+        <i class="fa-solid fa-bolt-lightning mr-1"></i> Feed
+      </a>
 
-    </head>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <body>
-        <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'FeedApp:profile' %}">
+              <i class="fa-regular fa-user mr-1"></i> Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'FeedApp:friends' %}">
+              <i class="fa-solid fa-user-group mr-1"></i> Friends
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'FeedApp:myfeed' %}">
+              <i class="fa-solid fa-rectangle-list mr-1"></i> My Feed
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'FeedApp:friends_feed' %}">
+              <i class="fa-solid fa-house mr-1"></i> Friends Feed
+            </a>
+          </li>
+        </ul>
 
-        <a class="navbar-brand" href="{% url 'FeedApp:index'%}">
-            Home</a>
+        <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <span class="navbar-text">
+              <i class="fa-regular fa-face-smile mr-1"></i> Hello, {{ user.username }}
+            </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:logout' %}">
+              <i class="fa-solid fa-right-from-bracket mr-1"></i> Log out
+            </a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:register' %}">
+              <i class="fa-solid fa-user-plus mr-1"></i> Register
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:login' %}">
+              <i class="fa-solid fa-right-to-bracket mr-1"></i> Log in
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarCollapse" aria-controls="navbarCollapse"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <main role="main" class="container mt-4">
+      {% block page_header %}{% endblock page_header %}
+      <div>{% block content %}{% endblock content %}</div>
+    </main>
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                
-            </ul>
-
-            <ul class="navbar-nav ml-auto">
-                {% if user.is_authenticated %}
-                
-                <li class="nav-item">
-                    <span class="navbar-text">Hello, {{ user.username }}.</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
-                </li>
-                
-                {% else %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:register' %}">Register</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:login' %}">Log in</a></li>
-                {% endif %}
-              </ul>
-        </div>
-
-        </nav>
-
-        <main role="main" class="container">
-            <div class="pb-2 mb-2 border-bottom">
-                {% block page_header %}{% endblock page_header %}
-            </div>
-
-            <div>
-                {% block content %}{% endblock content %}
-            </div>
-        </main>
-
-    </body>
-
-
-
-
+    {% bootstrap_javascript jquery='full' %}
+  </body>
 </html>

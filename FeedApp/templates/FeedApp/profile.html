@@ -1,0 +1,23 @@
+{% extends "FeedApp/base.html" %}
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="mb-4"><i class="fa-regular fa-address-card mr-2"></i>My Profile</h2>
+            
+            <form action="{% url 'FeedApp:profile' %}" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-regular fa-floppy-disk mr-1"></i> Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
